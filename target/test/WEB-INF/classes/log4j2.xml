@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <!--<Property name="LOG_HOME">/data/jsp/cloudapi.21cn.com/logs</Property>-->
+        <Property name="LOG_HOME">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%C:%line] - %msg%n"></PatternLayout>
+        </Console>
+
+        <!-- Rolling File Appender -->
+        <RollingRandomAccessFile name="stdout-log" fileName="${LOG_HOME}/stdout.log"
+                                 filePattern="${LOG_HOME}/stdout-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%file:%line] - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="stderr-log" fileName="${LOG_HOME}/stderr.log"
+                                 filePattern="${LOG_HOME}/stderr-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%file:%line] - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="return-log"
+                                 fileName="${LOG_HOME}/returnLog.log" immediateFlush="true"
+                                 filePattern="${LOG_HOME}/returnLog.log.%d{yyyyMMdd}">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%file:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+
+        <!--接口响应日志-->
+        <logger name="return_log" level="info"
+                additivity="false">
+            <appender-ref ref="return-log"/>
+            <appender-ref ref="console"/>
+        </logger>
+
+
+        <Root level="info" additivity="false">
+            <Appender-ref ref="stdout-log"/>
+            <Appender-ref ref="stderr-log"/>
+            <Appender-ref ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>
